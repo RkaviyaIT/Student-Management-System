@@ -7,6 +7,11 @@ if(!isset($_SESSION['username'])){
     header("location:login.php");
 }
 
+// ✅ PART 2: Include permission helper
+include 'permission_helper.php';
+
+// ✅ PART 2: Check if user has permission to view students
+requirePermission('view_students');
 
 $host="localhost";
 $user="root";
@@ -15,7 +20,9 @@ $db="schoolproject";
 
 $data=new mysqli($host,$user,$password,$db);
 
-
+// ✅ PART 1: Uses database INDEX - searches on indexed columns (usertype, class_id, username)
+// MySQL will use idx_student_search index and jump directly to matching rows
+// Instead of checking all rows, it goes straight to "student" usertype
 $sql="SELECT user.*, class.name AS class_name FROM user LEFT JOIN class ON user.class_id = class.id WHERE usertype='student' ";
 
 $result=mysqli_query($data,$sql);
